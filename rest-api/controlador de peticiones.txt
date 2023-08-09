@@ -1,0 +1,214 @@
+controlador
+
+// export const getUsers = async (req,res)=>{
+    
+
+//     try{
+
+//         const {EMAIL} = req.body
+//         const pool = await getConnection(); //cliente para conectarnos y obtener respuesta
+//         // const result = await pool.request()
+//         await pool.request()
+//             .input("email", sql.VarChar, EMAIL)
+//             .query(queries.getAllUsers) //peticion, con espera de tiempos
+//         // console.log(result)
+    
+//         /*
+//         recordset   es un arreglo con objetos de la peticion a la base, en si trae todos los datos que encuentre
+//         */
+//         // res.json(result.recordset) 
+//     }
+//     catch(error){
+//         res.status(500)
+//         res.send(error.message)
+//     }
+// }
+
+export const createNewUser = async (req,res) =>{
+    
+    const { NAME1, LAST_NAME, EMAIL, PASSWORD, DEPARTMENT } = req.body //esto es lo que mandamos en la peticion post y aqui lo obtenemos en el backen
+
+    if(NAME1 == null || LAST_NAME == null || EMAIL==null || PASSWORD == null || DEPARTMENT == null){
+        return res.status(400).json({msg:'Bad request. Please fill all fields'});
+    }
+    console.log(
+        NAME1,
+        LAST_NAME,
+        EMAIL,
+        PASSWORD,
+        DEPARTMENT
+    )
+
+    try{
+        const pool = await getConnection();
+        
+        await pool.request()
+            .input("name", sql.VarChar, NAME1)
+            .input("lastName", sql.VarChar, LAST_NAME)
+            .input("email", sql.VarChar, EMAIL)
+            .input("pass", sql.VarChar, PASSWORD)
+            .input("dep", sql.VarChar, DEPARTMENT)
+            .query(queries.createNewUser);
+
+        // res.json('new user')
+        res.json({NAME1,LAST_NAME,EMAIL,PASSWORD,DEPARTMENT});
+    }
+    catch(error){
+        res.status(500)
+        res.send(error.message)
+    }
+}
+
+export const getUserById = async (req,res) =>{
+
+    const { id } = req.params
+
+
+    const pool = await getConnection()
+    const result = await pool.request()
+        .input('Id', id)
+        .query(queries.getUserById)
+    
+        console.log(result)
+    
+    res.send(result.recordset[0])
+}
+
+export const getUser = async (req, res) => {
+
+    
+    // const [rows] = await db.query('SELECT NAME1 FROM USUARIOS WHERE EMAIL = ? and PASSWORD = ?', [
+        //     req.body.EMAIL, 
+        //     req.body.PASSWORD])
+        // if (rows.length > 0){
+            // res.json(rows)
+            // } else {
+                //     res.json("NO EXISTE")
+                // }
+        const {EMAIL,PASSWORD} = req.body;
+                
+        if(EMAIL == null || PASSWORD == null){
+            return res.status(400).json({ msg:'bad request. Please fill all fields'})
+        }
+                
+        const pool = await getConnection()
+        await pool.request()
+            .input("email",sql.VarChar, EMAIL)
+            .input("pass",sql.VarChar,PASSWORD)
+            .query(queries.getUserByEmail)
+
+        res.json({EMAIL})
+
+}
+
+export const deleteUserById = async (req,res) =>{
+
+    const { id } = req.params
+
+    const pool = await getConnection()
+    const result = await pool.request()
+        .input('Id', id)
+        .query(queries.deleteUser)
+    
+        console.log(result)
+    
+    res.send(result)
+}
+
+
+export const updateUserById = async (req,res)=>{
+
+    const { NAME1, LAST_NAME, EMAIL, PASSWORD, DEPARTMENT } = req.body //esto es lo que mandamos en la peticion post y aqui lo obtenemos en el backen
+    const { id } = req.params;
+
+    if(NAME1 == null || LAST_NAME == null || EMAIL==null || PASSWORD == null || DEPARTMENT == null){
+        return res.status(400).json({msg:'Bad request. Please fill all fields',
+            name:NAME1
+        });
+    }
+
+    const pool = await getConnection()
+    await pool.request()
+        .input("name",sql.VarChar, NAME1)
+        .input("lastName",sql.VarChar, LAST_NAME)
+        .input("email",sql.VarChar, EMAIL)
+        .input("pass",sql.VarChar, PASSWORD)
+        .input("dep",sql.VarChar, DEPARTMENT)
+        .input("id",sql.Int, id)
+        .query(queries.updateUserById)
+
+    res.json({ NAME1, LAST_NAME,EMAIL,PASSWORD,DEPARTMENT})
+
+}
+
+
+
+
+
+
+
+
+### get all users
+GET {{api}}
+Content-Type: application/json
+
+{
+    "EMAIL":"ggrtos05@mail.com"
+}
+
+### create a user
+POST {{api}}
+Content-Type: application/json
+
+{
+    "NAME1":"Ury",
+    "LAST_NAME":"Bae",
+    "EMAIL":"ury@gmail.com",
+    "PASSWORD": "1234",
+    "DEPARTMENT": "3"
+}
+
+### get a user
+GET {{api}}/1
+
+### get a user for email and password
+POST  {{api2}}
+Content-Type: application/json
+
+{
+    "EMAIL": "ggrtos05@mail.com",
+    "PASSWORD": "cag1234"
+}
+
+### delete a user
+
+DELETE {{api}}/5
+
+### update a user, tiene que ir junto, sin saltos despues del PUT porque sino no funciona
+
+PUT {{api}}/4
+Content-Type: application/json
+
+{
+    "NAME1":"Judith",
+    "LAST_NAME": "Sanchez",
+    "EMAIL":"judth431@hotmail.com",
+    "PASSWORD":"jud092",
+    "DEPARTMENT":"99"
+}
+
+
+
+//rutas
+
+router.post('/users', createNewUser) //crear, crear usuarios
+
+// router.get('/users/:id', getUserById) //obtener un usuario solomaente por id
+// router.get('/users/:email:password', getUserById) //obtener un usuario solomaente por id
+
+router.post('/users/login',getUser)
+// router.post("/task/login", getUser)
+
+router.delete('/users/:id', deleteUserById) //eliminar usuario, uno mismo
+
+router.put('/users/:id',updateUserById ) //actualizar usuario, informacion del usuario

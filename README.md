@@ -1,2 +1,5 @@
-# Dasegi-React-Native
-Graduation Project 
+#Poner la codigo de autentificacion para mostrar las rutas
+
+<>
+  !authStatLogin: <StackNavigator> ? <TabNavigator>
+</>

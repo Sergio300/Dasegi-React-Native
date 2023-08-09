@@ -1,0 +1,47 @@
+ver npm mssql en la web para la documentacon de la api
+
+
+npm -init -y    -> crea un package.json para arrancar el 
+
+modulos
+
+npm install mssql    -> para el sql server
+express     ->  para el backend, rutas, que hacer cuando el usuario visite las rutas
+morgan      -> 
+cors        -> puede recibir o direcciones desde otras ip, es como para hacerlo publico a cualquier peticion de servidor
+dotenv      -> define variables de entorno, para las conexiones
+
+usaremos babel para importar/exportar modulos de js
+
+npm install @babel/core  -> nucleo compilador
+@babel/cli
+@babel/preset-env ->escribe codigo moderno a codigo actual, es lo que hace 
+@babel/node   ->
+nodemon  -> como para que reinicie el codigo y no el servidor cada que hay uncambio, como un live server
+
+como todo esto no estara en produccion pues usamos -D  que es para desarrollador
+
+npm install @babel/core @babel/cli @babel/preset-env @babel/node nodemon -D
+
+creamos un archivo .babelrc con un json para configuracion para poder ejecutar babel-node nombrearchivo.js
+per necesitamos una configuracion extra en package.json
+
+esta configuracion de package.json en scripts (linea 7) hace que se haga como un lie server
+
+
+app.js es para la configuracion de express
+
+
+
+algunas veces el mssql no esta activo el protocolo tcp para conectarse a la base desde una aplicacion por lo que revisamos
+explorador, este equipo/(click derecho)administrar/servicios y aplicaciones/sql server/sql server network configuration/tcp/habilitamos
+
+
+
+creamos las rutas min 36
+
+
+instyalamos el rest client para hacer las pruebas de consultas CRUD, get, post, put, delete
+
+npm run dev  para arancar el servidor con la configuracion del package.json
+

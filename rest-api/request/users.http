@@ -1,0 +1,40 @@
+
+# @api = http://127.0.0.1:443/users
+@api = http://localhost:3000/users
+@api2 = http://localhost:3000/users/login/
+
+
+###get all users
+GET {{api}}
+
+###get a user
+GET {{api}}/1
+
+### create a new task
+POST {{api}}
+Content-Type: application/json
+
+{
+  "nombre": "prueba",
+  "apellido": "test",
+  "correo": "test@gmail.com",
+  "contra":"1234",
+  "departamento":"77"
+  
+}
+
+###delete user
+DELETE {{api}}/5
+
+###update user
+PUT {{api}}/8
+Content-Type: application/json
+
+{
+  "nombre": "Francisco",
+  "apellido": "Flores",
+  "correo": "francis@gmail.com",
+  "contra":"1234",
+  "departamento":"12",
+  "id_lugares":"9"
+}
